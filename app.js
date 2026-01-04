@@ -71,7 +71,8 @@ function initData() {
 }
 
 // ==================== AUTH ====================
-function loginAsAdmin() {
+// Make these functions globally accessible
+window.loginAsAdmin = function() {
     document.getElementById('email').value = 'admin@renttracker.com';
     document.getElementById('password').value = 'admin123';
     const form = document.getElementById('loginForm');
@@ -79,7 +80,7 @@ function loginAsAdmin() {
     form.dispatchEvent(submitEvent);
 }
 
-function loginAsRenter() {
+window.loginAsRenter = function() {
     document.getElementById('email').value = 'renter@renttracker.com';
     document.getElementById('password').value = 'renter123';
     const form = document.getElementById('loginForm');
@@ -87,17 +88,19 @@ function loginAsRenter() {
     form.dispatchEvent(submitEvent);
 }
 
-function showDashboard() {
+window.showDashboard = function() {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('dashboard').classList.add('show');
     document.getElementById('userName').textContent = currentUser.name;
     document.getElementById('userRole').textContent = currentUser.role.toUpperCase();
     document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
     setupNavigation();
-    loadDashboard();
+    if (typeof loadDashboard === 'function') {
+        loadDashboard();
+    }
 }
 
-function logout() {
+window.logout = function() {
     currentUser = null;
     localStorage.removeItem('currentUser');
     document.getElementById('loginPage').style.display = 'flex';

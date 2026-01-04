@@ -1,7 +1,7 @@
 // Part 3 - Modals, Forms, and Navigation
 
 // ==================== MODALS ====================
-function openModal(type) {
+window.openModal = function(type) {
     const modal = document.getElementById(type + 'Modal');
     modal.classList.add('show');
     
@@ -29,7 +29,7 @@ function openModal(type) {
     }
 }
 
-function closeModal(type) {
+window.closeModal = function(type) {
     const modal = document.getElementById(type + 'Modal');
     modal.classList.remove('show');
 }
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================== NAVIGATION ====================
-function showPage(page) {
+window.showPage = function(page) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     if (event && event.target) {
         event.target.classList.add('active');

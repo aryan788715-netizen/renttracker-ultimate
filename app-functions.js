@@ -112,11 +112,27 @@ window.loadDashboard = function() {
     
     document.getElementById('recentActivity').innerHTML = recentHtml || '<div class="empty-state"><div class="empty-icon"><i class="fas fa-inbox"></i></div><h3>No recent activity</h3></div>';
     
+    // Load all charts with a slight delay to ensure DOM is ready
     setTimeout(() => {
+        // Primary Charts
         Charts.revenue();
         Charts.occupancy();
         Charts.paymentStatus();
         Charts.revenueExpense();
+        
+        // Advanced Analytics Charts
+        Charts.propertyType();
+        Charts.paymentMethod();
+        Charts.maintenanceCost();
+        Charts.leaseExpiry();
+        Charts.propertyValue();
+        Charts.paymentTimeline();
+        Charts.occupancyTrend();
+        Charts.revenueByProperty();
+        Charts.maintenanceCategory();
+        Charts.cashFlow();
+        Charts.collectionRate();
+        Charts.tenantDistribution();
     }, 100);
 }
 

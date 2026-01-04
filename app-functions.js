@@ -1,7 +1,7 @@
 // Part 2 - Dashboard and Page Functions
 
 // ==================== DASHBOARD ====================
-function loadDashboard() {
+window.loadDashboard = function() {
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
     const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
     const payments = JSON.parse(localStorage.getItem('payments') || '[]');
@@ -121,7 +121,7 @@ function loadDashboard() {
 }
 
 // ==================== PROPERTIES ====================
-function loadProperties() {
+window.loadProperties = function() {
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
     const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
     
@@ -171,7 +171,7 @@ function loadProperties() {
     document.getElementById('propertiesTable').innerHTML = html;
 }
 
-function deleteProperty(id) {
+window.deleteProperty = function(id) {
     if (confirm('Delete this property?')) {
         const properties = JSON.parse(localStorage.getItem('properties') || '[]').filter(p => p.id !== id);
         localStorage.setItem('properties', JSON.stringify(properties));
@@ -182,7 +182,7 @@ function deleteProperty(id) {
 }
 
 // ==================== TENANTS ====================
-function loadTenants() {
+window.loadTenants = function() {
     const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
     
@@ -230,7 +230,7 @@ function loadTenants() {
     document.getElementById('tenantsTable').innerHTML = html;
 }
 
-function deleteTenant(id) {
+window.deleteTenant = function(id) {
     if (confirm('Delete this tenant?')) {
         const tenants = JSON.parse(localStorage.getItem('tenants') || '[]').filter(t => t.id !== id);
         localStorage.setItem('tenants', JSON.stringify(tenants));
@@ -241,7 +241,7 @@ function deleteTenant(id) {
 }
 
 // ==================== PAYMENTS ====================
-function loadPayments() {
+window.loadPayments = function() {
     const payments = JSON.parse(localStorage.getItem('payments') || '[]');
     const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
@@ -288,7 +288,7 @@ function loadPayments() {
 }
 
 // ==================== MAINTENANCE ====================
-function loadMaintenance() {
+window.loadMaintenance = function() {
     const maintenance = JSON.parse(localStorage.getItem('maintenance') || '[]');
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
     
@@ -335,7 +335,7 @@ function loadMaintenance() {
 }
 
 // ==================== RENTER VIEW ====================
-function loadRenterView() {
+window.loadRenterView = function() {
     const properties = JSON.parse(localStorage.getItem('properties') || '[]');
     const payments = JSON.parse(localStorage.getItem('payments') || '[]');
     const maintenance = JSON.parse(localStorage.getItem('maintenance') || '[]');
@@ -422,5 +422,3 @@ function loadRenterView() {
         </table>
     ` : '<div class="empty-state"><div class="empty-icon"><i class="fas fa-tools"></i></div><p>No maintenance requests yet</p></div>';
 }
-
-// Continue in next file...

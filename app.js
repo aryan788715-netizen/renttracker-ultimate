@@ -16,68 +16,6 @@ const Utils = {
     }
 };
 
-// ==================== AUTH ====================
-function loginAsAdmin() {
-    document.getElementById('email').value = 'admin@renttracker.com';
-    document.getElementById('password').value = 'admin123';
-    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-}
-
-function loginAsRenter() {
-    document.getElementById('email').value = 'renter@renttracker.com';
-    document.getElementById('password').value = 'renter123';
-    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-}
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        showDashboard();
-    } else {
-        alert('Invalid credentials!');
-    }
-});
-
-function showDashboard() {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('dashboard').classList.add('show');
-    document.getElementById('userName').textContent = currentUser.name;
-    document.getElementById('userRole').textContent = currentUser.role.toUpperCase();
-    document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-    setupNavigation();
-    loadDashboard();
-}
-
-function logout() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    document.getElementById('loginPage').style.display = 'flex';
-    document.getElementById('dashboard').classList.remove('show');
-    document.getElementById('loginForm').reset();
-}
-
-function setupNavigation() {
-    const navMenu = document.getElementById('navMenu');
-    if (currentUser.role === 'admin') {
-        navMenu.innerHTML = `
-            <button class="nav-btn active" onclick="showPage('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn" onclick="showPage('properties')"><i class="fas fa-building"></i> Properties</button>
-            <button class="nav-btn" onclick="showPage('tenants')"><i class="fas fa-users"></i> Tenants</button>
-            <button class="nav-btn" onclick="showPage('payments')"><i class="fas fa-money-bill-wave"></i> Payments</button>
-            <button class="nav-btn" onclick="showPage('maintenance')"><i class="fas fa-tools"></i> Maintenance</button>
-        `;
-    } else {
-        navMenu.innerHTML = `<button class="nav-btn active" onclick="showPage('renter')"><i class="fas fa-home"></i> My Property</button>`;
-    }
-}
-
 // ==================== INIT DATA ====================
 function initData() {
     if (!localStorage.getItem('initialized')) {
@@ -129,6 +67,56 @@ function initData() {
         ]));
         
         localStorage.setItem('initialized', 'true');
+    }
+}
+
+// ==================== AUTH ====================
+function loginAsAdmin() {
+    document.getElementById('email').value = 'admin@renttracker.com';
+    document.getElementById('password').value = 'admin123';
+    const form = document.getElementById('loginForm');
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
+}
+
+function loginAsRenter() {
+    document.getElementById('email').value = 'renter@renttracker.com';
+    document.getElementById('password').value = 'renter123';
+    const form = document.getElementById('loginForm');
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
+}
+
+function showDashboard() {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('dashboard').classList.add('show');
+    document.getElementById('userName').textContent = currentUser.name;
+    document.getElementById('userRole').textContent = currentUser.role.toUpperCase();
+    document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+    setupNavigation();
+    loadDashboard();
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('dashboard').classList.remove('show');
+    document.getElementById('loginForm').reset();
+}
+
+function setupNavigation() {
+    const navMenu = document.getElementById('navMenu');
+    if (currentUser.role === 'admin') {
+        navMenu.innerHTML = `
+            <button class="nav-btn active" onclick="showPage('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</button>
+            <button class="nav-btn" onclick="showPage('properties')"><i class="fas fa-building"></i> Properties</button>
+            <button class="nav-btn" onclick="showPage('tenants')"><i class="fas fa-users"></i> Tenants</button>
+            <button class="nav-btn" onclick="showPage('payments')"><i class="fas fa-money-bill-wave"></i> Payments</button>
+            <button class="nav-btn" onclick="showPage('maintenance')"><i class="fas fa-tools"></i> Maintenance</button>
+        `;
+    } else {
+        navMenu.innerHTML = `<button class="nav-btn active" onclick="showPage('renter')"><i class="fas fa-home"></i> My Property</button>`;
     }
 }
 
@@ -239,4 +227,46 @@ const Charts = {
     }
 };
 
-// Continue with rest of functions in next part...
+// ==================== INIT ON PAGE LOAD ====================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...');
+    
+    // Initialize data first
+    initData();
+    
+    // Setup login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Login form submitted');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('Email:', email);
+            
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            console.log('Users:', users);
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                console.log('User found:', user);
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showDashboard();
+            } else {
+                console.log('Invalid credentials');
+                alert('Invalid credentials!');
+            }
+        });
+    }
+    
+    // Check if user is already logged in
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showDashboard();
+    }
+});

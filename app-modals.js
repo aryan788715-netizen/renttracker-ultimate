@@ -35,110 +35,114 @@ function closeModal(type) {
 }
 
 // ==================== FORMS ====================
-document.getElementById('propertyForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
     
-    const properties = JSON.parse(localStorage.getItem('properties') || '[]');
-    properties.push({
-        id: Utils.generateId(),
-        name: document.getElementById('propName').value,
-        type: document.getElementById('propType').value,
-        address: document.getElementById('propAddress').value,
-        rent: parseInt(document.getElementById('propRent').value),
-        beds: parseInt(document.getElementById('propBeds').value) || 0,
-        baths: parseInt(document.getElementById('propBaths').value) || 0,
-        sqft: parseInt(document.getElementById('propSqft').value) || 0,
-        status: document.getElementById('propStatus').value,
-        value: parseInt(document.getElementById('propRent').value) * 200,
-        created: new Date().toISOString()
+    document.getElementById('propertyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const properties = JSON.parse(localStorage.getItem('properties') || '[]');
+        properties.push({
+            id: Utils.generateId(),
+            name: document.getElementById('propName').value,
+            type: document.getElementById('propType').value,
+            address: document.getElementById('propAddress').value,
+            rent: parseInt(document.getElementById('propRent').value),
+            beds: parseInt(document.getElementById('propBeds').value) || 0,
+            baths: parseInt(document.getElementById('propBaths').value) || 0,
+            sqft: parseInt(document.getElementById('propSqft').value) || 0,
+            status: document.getElementById('propStatus').value,
+            value: parseInt(document.getElementById('propRent').value) * 200,
+            created: new Date().toISOString()
+        });
+        
+        localStorage.setItem('properties', JSON.stringify(properties));
+        closeModal('property');
+        this.reset();
+        loadProperties();
+        loadDashboard();
+        alert('Property added successfully!');
     });
-    
-    localStorage.setItem('properties', JSON.stringify(properties));
-    closeModal('property');
-    this.reset();
-    loadProperties();
-    loadDashboard();
-    alert('Property added successfully!');
-});
 
-document.getElementById('tenantForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
-    tenants.push({
-        id: Utils.generateId(),
-        name: document.getElementById('tenantName').value,
-        email: document.getElementById('tenantEmail').value,
-        phone: document.getElementById('tenantPhone').value,
-        propertyId: document.getElementById('tenantProperty').value,
-        leaseStart: document.getElementById('tenantStart').value,
-        leaseEnd: document.getElementById('tenantEnd').value,
-        deposit: parseInt(document.getElementById('tenantDeposit').value) || 0,
-        emergencyContact: document.getElementById('tenantEmergency').value,
-        created: new Date().toISOString()
+    document.getElementById('tenantForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const tenants = JSON.parse(localStorage.getItem('tenants') || '[]');
+        tenants.push({
+            id: Utils.generateId(),
+            name: document.getElementById('tenantName').value,
+            email: document.getElementById('tenantEmail').value,
+            phone: document.getElementById('tenantPhone').value,
+            propertyId: document.getElementById('tenantProperty').value,
+            leaseStart: document.getElementById('tenantStart').value,
+            leaseEnd: document.getElementById('tenantEnd').value,
+            deposit: parseInt(document.getElementById('tenantDeposit').value) || 0,
+            emergencyContact: document.getElementById('tenantEmergency').value,
+            created: new Date().toISOString()
+        });
+        
+        localStorage.setItem('tenants', JSON.stringify(tenants));
+        closeModal('tenant');
+        this.reset();
+        loadTenants();
+        loadDashboard();
+        alert('Tenant added successfully!');
     });
-    
-    localStorage.setItem('tenants', JSON.stringify(tenants));
-    closeModal('tenant');
-    this.reset();
-    loadTenants();
-    loadDashboard();
-    alert('Tenant added successfully!');
-});
 
-document.getElementById('paymentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const payments = JSON.parse(localStorage.getItem('payments') || '[]');
-    const tenantId = document.getElementById('paymentTenant').value;
-    const tenant = JSON.parse(localStorage.getItem('tenants') || '[]').find(t => t.id === tenantId);
-    
-    payments.push({
-        id: Utils.generateId(),
-        tenantId: tenantId,
-        propertyId: tenant.propertyId,
-        amount: parseInt(document.getElementById('paymentAmount').value),
-        date: document.getElementById('paymentDate').value,
-        method: document.getElementById('paymentMethod').value,
-        status: document.getElementById('paymentStatus').value,
-        txnId: document.getElementById('paymentTxnId').value || 'TXN' + Date.now(),
-        notes: document.getElementById('paymentNotes').value,
-        created: new Date().toISOString()
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const payments = JSON.parse(localStorage.getItem('payments') || '[]');
+        const tenantId = document.getElementById('paymentTenant').value;
+        const tenant = JSON.parse(localStorage.getItem('tenants') || '[]').find(t => t.id === tenantId);
+        
+        payments.push({
+            id: Utils.generateId(),
+            tenantId: tenantId,
+            propertyId: tenant.propertyId,
+            amount: parseInt(document.getElementById('paymentAmount').value),
+            date: document.getElementById('paymentDate').value,
+            method: document.getElementById('paymentMethod').value,
+            status: document.getElementById('paymentStatus').value,
+            txnId: document.getElementById('paymentTxnId').value || 'TXN' + Date.now(),
+            notes: document.getElementById('paymentNotes').value,
+            created: new Date().toISOString()
+        });
+        
+        localStorage.setItem('payments', JSON.stringify(payments));
+        closeModal('payment');
+        this.reset();
+        loadPayments();
+        loadDashboard();
+        alert('Payment recorded successfully!');
     });
-    
-    localStorage.setItem('payments', JSON.stringify(payments));
-    closeModal('payment');
-    this.reset();
-    loadPayments();
-    loadDashboard();
-    alert('Payment recorded successfully!');
-});
 
-document.getElementById('maintenanceForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const maintenance = JSON.parse(localStorage.getItem('maintenance') || '[]');
-    maintenance.push({
-        id: Utils.generateId(),
-        propertyId: document.getElementById('maintProperty').value,
-        category: document.getElementById('maintCategory').value,
-        title: document.getElementById('maintTitle').value,
-        description: document.getElementById('maintDesc').value,
-        priority: document.getElementById('maintPriority').value,
-        status: document.getElementById('maintStatus').value,
-        cost: parseInt(document.getElementById('maintCost').value) || 0,
-        created: new Date().toISOString()
+    document.getElementById('maintenanceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const maintenance = JSON.parse(localStorage.getItem('maintenance') || '[]');
+        maintenance.push({
+            id: Utils.generateId(),
+            propertyId: document.getElementById('maintProperty').value,
+            category: document.getElementById('maintCategory').value,
+            title: document.getElementById('maintTitle').value,
+            description: document.getElementById('maintDesc').value,
+            priority: document.getElementById('maintPriority').value,
+            status: document.getElementById('maintStatus').value,
+            cost: parseInt(document.getElementById('maintCost').value) || 0,
+            created: new Date().toISOString()
+        });
+        
+        localStorage.setItem('maintenance', JSON.stringify(maintenance));
+        closeModal('maintenance');
+        this.reset();
+        loadMaintenance();
+        if (currentUser && currentUser.role === 'renter') {
+            loadRenterView();
+        }
+        loadDashboard();
+        alert('Maintenance request created successfully!');
     });
     
-    localStorage.setItem('maintenance', JSON.stringify(maintenance));
-    closeModal('maintenance');
-    this.reset();
-    loadMaintenance();
-    if (currentUser && currentUser.role === 'renter') {
-        loadRenterView();
-    }
-    loadDashboard();
-    alert('Maintenance request created successfully!');
 });
 
 // ==================== NAVIGATION ====================
@@ -164,13 +168,4 @@ function showPage(page) {
     } else if (page === 'renter') {
         loadRenterView();
     }
-}
-
-// ==================== INIT ====================
-initData();
-
-const savedUser = localStorage.getItem('currentUser');
-if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    showDashboard();
 }
